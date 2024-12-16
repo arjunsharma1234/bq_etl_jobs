@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Directories
-DATA_PATH="/root/workspace/module_wise/"
+DATA_ENV="/root/workspace/" 
+DATA_PATH="/root/workspace/module_wise"
 RAW_DIR="${DATA_PATH}/raw_csv"
 CLEANED_DIR="${DATA_PATH}/cleaned"
 SCHEMA_DIR="${DATA_PATH}/schemas"
@@ -33,6 +34,17 @@ for raw_csv in "${RAW_DIR}"/*.csv; do
     fi
 
     # Run cleaning script
+
+    if [ -f "${DATA_ENV}/env/bin/activate" ]; then
+       
+       source "${DATA_ENV}/env/bin/activate"
+       echo "Environment activated successfully....."
+
+    else
+        echo "Error: Virtual environment not found at ${DATA_ENV}/env/bin/activate"
+        exit 1
+    fi
+
     python3 process_clean.py "$schema_file" "$raw_csv" "$cleaned_csv"
     if [ $? -ne 0 ]; then
         echo "Error cleaning $raw_csv. Check the log for details." | tee -a "$LOG_FILE"
