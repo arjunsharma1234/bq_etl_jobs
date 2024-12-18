@@ -52,7 +52,7 @@ for raw_csv in "${RAW_DIR}"/*.csv; do
     fi
 
     # Upload to BigQuery
-    /bin/bash /root/workspace/upload_bq.sh "$cleaned_csv" "$schema_file" "$table_name" "$DATASET"
+    /bin/bash upload_bq.sh "$cleaned_csv" "$schema_file" "$table_name" "$DATASET"
     if [ $? -ne 0 ]; then
         echo "Error uploading $cleaned_csv to BigQuery." | tee -a "$LOG_FILE"
         continue
