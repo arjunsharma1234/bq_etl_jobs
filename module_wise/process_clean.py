@@ -34,11 +34,22 @@ class DataCleaner:
 
     def load_csv(self, csv_file):
         encoding = self.detect_encoding(csv_file)
+        if not encoding:
+            encoding = 'utf-8'
+
         print(f"Detected encoding for {csv_file}: {encoding}")
         try:
-            self.df = pd.read_csv(csv_file, encoding=encoding)
+            
+            with open(csv_file, 'rb') as f:
+                clean_data = f.read().decode(encoding, errors='replace')
+
+            from io import StringIO
+            cleaned_csv = StringIO(clean_data)
+            self.df = pd.read_csv(cleaned_csv)
+
         except Exception as e:
             raise Exception(f"Error loading CSV file {csv_file}: {e}")
+
 
     def clean_data(self):
         if self.df is None or self.schema is None:
