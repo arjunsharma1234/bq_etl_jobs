@@ -14,7 +14,8 @@ class DataCleaner:
             "INTEGER": np.int64,
             "FLOAT": np.float64,
             "STRING": str,
-            "TIMESTAMP": "datetime64[ns]"
+            "TIMESTAMP": "datetime64[ns]",
+            "DATE": "datetime64[ns]"
         }
 
     def load_schema(self):
@@ -64,7 +65,7 @@ class DataCleaner:
                     if column_type in ["INTEGER", "FLOAT"]:
                         self.df[column_name] = self.df[column_name].replace({None: 0})
                         self.df[column_name] = pd.to_numeric(self.df[column_name], errors='coerce').fillna(0).astype(self.type_map[column_type])
-                    elif column_type == "TIMESTAMP":
+                    elif column_type in ["TIMESTAMP", "DATE"]:
                         self.df[column_name] = pd.to_datetime(self.df[column_name], errors='coerce')
                     else:
                         self.df[column_name] = self.df[column_name].astype(self.type_map[column_type])
@@ -78,7 +79,7 @@ class DataCleaner:
                     self.df[column_name] = 0
                 elif column['type'] == 'FLOAT':
                     self.df[column_name] = 0.0
-                elif column['type'] == 'TIMESTAMP':
+                elif column['type'] in ['TIMESTAMP', 'DATE']:
                     self.df[column_name] = pd.NaT
 
     def save_cleaned_csv(self, output_csv):
